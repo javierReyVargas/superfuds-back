@@ -1,32 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\bill;
+namespace App\Http\Controllers\client;
 
 use App\Bill;
+use App\Client;
 use App\Http\Controllers\ApiController;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
-class BillController extends ApiController
+class ClientBillController extends ApiController
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Client $client)
     {
-        //
+        $bills = $client->bills;
+
+        return $this->showAll($bills);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -34,9 +30,26 @@ class BillController extends ApiController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Client $client)
     {
-        //
+        $collectionProductsResponse = new Collection();
+        $rules = [
+            'arrProducts' => 'required'
+        ];
+
+        $this->validate($request, $rules);
+
+
+        $data = $request->all();
+
+        foreach ($data['arrProducts'] as $product) {
+            $product['client_id'] = $client->id;
+            $response = Bill::create($product);
+
+            $collectionProductsResponse->add($response);
+        }
+
+        return $this->showAll($collectionProductsResponse);
     }
 
     /**
@@ -46,17 +59,6 @@ class BillController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function show(Bill $bill)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Bill  $bill
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Bill $bill)
     {
         //
     }

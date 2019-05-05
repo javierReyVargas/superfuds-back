@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\provider;
 
+use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 
-class ProviderController extends Controller
+class ProviderController extends ApiController
 {
     /**
      * Display a listing of the resource.

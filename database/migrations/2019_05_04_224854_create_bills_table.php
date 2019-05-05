@@ -15,7 +15,15 @@ class CreateBillsTable extends Migration
     {
         Schema::create('bills', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('quantity');
+
+            $table->unsignedBigInteger('client_id');
+            $table->unsignedBigInteger('product_id');
+
             $table->timestamps();
+
+            $table->foreign('client_id')->references('id')->on('users');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 
