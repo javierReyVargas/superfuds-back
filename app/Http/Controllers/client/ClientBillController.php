@@ -5,9 +5,11 @@ namespace App\Http\Controllers\client;
 use App\Bill;
 use App\Client;
 use App\Http\Controllers\ApiController;
+use App\Product;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class ClientBillController extends ApiController
 {
@@ -32,6 +34,7 @@ class ClientBillController extends ApiController
      */
     public function store(Request $request, Client $client)
     {
+
         $collectionProductsResponse = new Collection();
         $rules = [
             'arrProducts' => 'required'
@@ -42,14 +45,42 @@ class ClientBillController extends ApiController
 
         $data = $request->all();
 
-        dd($data);
-        foreach ($data['arrProducts'] as $product) {
-            $product['client_id'] = $client->id;
-            $response = Bill::create($product);
+        DB::beginTransaction();
 
-            $collectionProductsResponse->add($response);
+        try {
+            foreach ($data['arrProducts'] as $product) {
+
+                if ( $product['quantityBuy'] <= $product['quantity'] ) {
+
+                    $modelProduct = Product::findOrFail($product['id']);
+                    $modelProduct->quantity = $modelProduct->quantity - $product['quantityBuy'];
+
+                    if ($modelProduct->save()){
+                        $product['client_id'] = $client->id;
+                        $product['product_id'] = $product['id'];
+                        $product['quantity'] = $product['quantityBuy'];
+
+                        $response = Bill::create($product);
+
+                        $collectionProductsResponse->add($response);
+                    } else {
+                        DB::rollback();
+                        return $this->errorResponse('Ha ocurrido un error al modificar el inventario para:  '. $product['name'] .' es de ' . $product['quantity'], 429);
+                    }
+                } else {
+                    DB::rollback();
+                    return $this->errorResponse('La disponibilidad del producto '. $product['name'] .' es de ' . $product['quantity'], 429);
+                }
+            }
+
+            DB::commit();
+            return $this->showAll($collectionProductsResponse);
+        } catch (\Exception $e) {
+
+            DB::rollback();
+            return $this->errorResponse($e.message, $e.code);
         }
-
+        
         return $this->showAll($collectionProductsResponse);
     }
 
