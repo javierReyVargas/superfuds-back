@@ -42,6 +42,7 @@ class ClientBillController extends ApiController
 
         $data = $request->all();
 
+        dd($data);
         foreach ($data['arrProducts'] as $product) {
             $product['client_id'] = $client->id;
             $response = Bill::create($product);

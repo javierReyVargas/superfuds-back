@@ -15,17 +15,7 @@ class ProductController extends ApiController
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->showAll(Product::all());
     }
 
     /**
@@ -35,9 +25,7 @@ class ProductController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
-    }
+    {}
 
     /**
      * Display the specified resource.
