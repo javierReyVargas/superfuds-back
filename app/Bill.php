@@ -11,4 +11,12 @@ class Bill extends Model
         'quantity',
         'client_id'
     ];
+
+    public function client() {
+        return $this->belongsTo(User::class);
+    }
+
+    public function products() {
+        return $this->belongsToMany(Product::class);
+    }
 }

@@ -15,7 +15,15 @@ class BillController extends ApiController
      */
     public function index()
     {
-        //
+        $dataResponse = Bill::all();
+
+        foreach ($dataResponse as $item) {
+            $item->client;
+            $item->products;
+        }
+
+        return $this->showAll($dataResponse);
+
     }
 
 

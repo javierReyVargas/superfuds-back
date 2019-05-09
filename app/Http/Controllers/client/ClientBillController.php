@@ -34,20 +34,21 @@ class ClientBillController extends ApiController
      */
     public function store(Request $request, Client $client)
     {
-
         $collectionProductsResponse = new Collection();
         $rules = [
-            'arrProducts' => 'required'
+            'arrProducts' => 'required',
+            'totalBill' => 'required'
         ];
 
         $this->validate($request, $rules);
-
-
         $data = $request->all();
 
         DB::beginTransaction();
 
         try {
+            $data['client_id'] = $client->id;
+            $modelBill = Bill::create($data);
+
             foreach ($data['arrProducts'] as $product) {
 
                 if ( $product['quantityBuy'] <= $product['quantity'] ) {
@@ -56,13 +57,11 @@ class ClientBillController extends ApiController
                     $modelProduct->quantity = $modelProduct->quantity - $product['quantityBuy'];
 
                     if ($modelProduct->save()){
-                        $product['client_id'] = $client->id;
                         $product['product_id'] = $product['id'];
-                        $product['quantity'] = $product['quantityBuy'];
 
-                        $response = Bill::create($product);
+                        $modelBill->products()->attach($product['id'], ['quantity' => $product['quantityBuy']]);
 
-                        $collectionProductsResponse->add($response);
+                        $collectionProductsResponse->add($modelBill);
                     } else {
                         DB::rollback();
                         return $this->errorResponse('Ha ocurrido un error al modificar el inventario para:  '. $product['name'] .' es de ' . $product['quantity'], 429);
@@ -78,9 +77,9 @@ class ClientBillController extends ApiController
         } catch (\Exception $e) {
 
             DB::rollback();
-            return $this->errorResponse($e.message, $e.code);
+            return $this->errorResponse($e, 500);
         }
-        
+
         return $this->showAll($collectionProductsResponse);
     }
 

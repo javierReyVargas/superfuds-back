@@ -20,7 +20,7 @@ Route::resource('client.bill', 'client\ClientBillController', ['except' => [ 'cr
 Route::resource('provider', 'provider\ProviderController', ['only' => [ 'index', 'show']]);
 Route::resource('provider.product', 'provider\ProviderProductController', ['except' => [ 'create', 'edit']]);
 
-Route::resource('bills', 'provider\ProviderController', ['except' => [ 'create', 'edit']]);
+Route::resource('bills', 'bill\billController', ['except' => [ 'create', 'edit']]);
 
 Route::resource('products', 'product\ProductController', ['only' => [ 'index', 'show']]);
 
