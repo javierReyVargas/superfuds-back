@@ -67,7 +67,6 @@ class UserController extends ApiController
 
     public function me()
     {
-        dd();
         return $this->showOne(Auth::user());
     }
 }
