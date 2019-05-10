@@ -29,5 +29,6 @@ Route::resource('products.report', 'product\ProductReportController', ['only' =>
 Route::get('productsHasTransactions', 'product\ProductController@getProductsHasTransactions');
 
 Route::resource('user', 'user\UserController', ['except' => [ 'create', 'edit']]);
+Route::get('me', 'user\UserController@me');
 
 Route::post('oauth/token', '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken');
