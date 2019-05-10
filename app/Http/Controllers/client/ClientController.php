@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\client;
 
+use App\Client;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 
@@ -14,17 +15,9 @@ class ClientController extends ApiController
      */
     public function index()
     {
-        //
-    }
+        $modelResponse = Client::has('bills')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->showAll($modelResponse);
     }
 
     /**
@@ -45,17 +38,6 @@ class ClientController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

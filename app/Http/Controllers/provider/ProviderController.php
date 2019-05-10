@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\provider;
 
 use App\Http\Controllers\ApiController;
+use App\Provider;
 use Illuminate\Http\Request;
 
 class ProviderController extends ApiController
@@ -14,17 +15,9 @@ class ProviderController extends ApiController
      */
     public function index()
     {
-        //
-    }
+        $dataResponse = Provider::has('products')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return $this->showAll($dataResponse);
     }
 
     /**
@@ -45,17 +38,6 @@ class ProviderController extends ApiController
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
     {
         //
     }

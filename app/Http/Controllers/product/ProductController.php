@@ -4,6 +4,7 @@ namespace App\Http\Controllers\product;
 
 use App\Http\Controllers\ApiController;
 use App\Product;
+use App\Provider;
 use Illuminate\Http\Request;
 
 class ProductController extends ApiController
@@ -70,5 +71,11 @@ class ProductController extends ApiController
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function getProductsHasTransactions() {
+        $dataResponse = Product::has('bills')->get();
+
+        return $this->showAll($dataResponse);
     }
 }

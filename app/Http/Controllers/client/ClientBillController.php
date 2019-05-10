@@ -49,6 +49,7 @@ class ClientBillController extends ApiController
             $data['client_id'] = $client->id;
             $modelBill = Bill::create($data);
 
+            $totalBill = 0;
             foreach ($data['arrProducts'] as $product) {
 
                 if ( $product['quantityBuy'] <= $product['quantity'] ) {
@@ -57,8 +58,10 @@ class ClientBillController extends ApiController
                     $modelProduct->quantity = $modelProduct->quantity - $product['quantityBuy'];
 
                     if ($modelProduct->save()){
-                        $product['product_id'] = $product['id'];
 
+                        $totalBill += $modelProduct->price * $product['quantityBuy'];
+
+                        $product['product_id'] = $product['id'];
                         $modelBill->products()->attach($product['id'], ['quantity' => $product['quantityBuy']]);
 
                         $collectionProductsResponse->add($modelBill);
@@ -71,6 +74,9 @@ class ClientBillController extends ApiController
                     return $this->errorResponse('La disponibilidad del producto '. $product['name'] .' es de ' . $product['quantity'], 429);
                 }
             }
+
+            $modelBill->totalBill = $totalBill;
+            $modelBill->update();
 
             DB::commit();
             return $this->showAll($collectionProductsResponse);
