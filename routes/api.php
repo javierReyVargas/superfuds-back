@@ -22,7 +22,7 @@ Route::resource('provider', 'provider\ProviderController', ['only' => [ 'index',
 Route::resource('provider.product', 'provider\ProviderProductController', ['except' => [ 'create', 'edit']]);
 Route::resource('provider.report', 'provider\ProviderReportController', ['only' => [ 'index', 'show']]);
 
-Route::resource('bills', 'bill\billController', ['except' => [ 'create', 'edit']]);
+Route::resource('bills', 'bill\BillController', ['except' => [ 'create', 'edit']]);
 
 Route::resource('products', 'product\ProductController', ['only' => [ 'index', 'show']]);
 Route::resource('products.report', 'product\ProductReportController', ['only' => [ 'index', 'show']]);

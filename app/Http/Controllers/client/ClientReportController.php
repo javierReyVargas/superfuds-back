@@ -31,7 +31,6 @@ class ClientReportController extends ApiController
                     'provider' => $product->provider,
                     'client' => $bill->client,
                     'created_at' => $bill->created_at,
-                    'total' => $bill->created_at,
                 ]);
             }
         }
